@@ -12,7 +12,7 @@ day = day.strftime("%A")
 
 
 # Opening the csv file and parsing the data into a list
-# Data is Day, Class Start Time, Zoom Link
+# Data is a list consisting Day, Class Start Time, Zoom Link
 with open('Schedule.csv', 'r', newline='') as csv_file:
     reader = csv.reader(csv_file)
     next(reader)
@@ -24,26 +24,9 @@ with open('Schedule.csv', 'r', newline='') as csv_file:
         data.append([class_day, class_time, class_link])
 
 
-def JoinMeeting(meeting_link):
-    # Opening the zoom link on the browser
-    try:
-        webbrowser.open_new_tab(meeting_link)
-        time.sleep(15)
-    except:
-        print("Can't open the browser")
-        return
-
-    # Clicking left arrow to navigate on allow if the check box hasn't been checked
-    # If it has been checked then the following commands do nothing and zoom opens.
-    pyautogui.press('left')
-    time.sleep(3)
-
-    # Clicking enter in order to press allow
-    pyautogui.press('enter')
-    return
-
-
 def StartCheck():
+    no_class_today = True
+    
     # Iterating through the information list and getting the details of each class
     for i in range(len(data)):
         class_day = data[i][0]
@@ -54,6 +37,7 @@ def StartCheck():
 
         # If the day is the current day it checks the time and calls the JoinMeeting function 5 minutes before the class
         if day == class_day:
+            no_class_today = False 
             time_dif = class_time - cur_hour
 
             # Checks if the time difference between the class and the current time is positive or equal to 0
@@ -96,14 +80,14 @@ def StartCheck():
                 print("Can't connect to the class that starts at:", class_time, "because time is:", cur_hour, ":",
                       cur_min)
                 continue
-        elif day == "Saturday" or day == "Sunday":
-            print("No class today")
-            break
         else:
             continue
+    if no_class_today:
+        print("You don't have a class today")
 
 
+# Program does not work on Mozilla Firefox, preferably use Google Chrome, Opera or Edge
+# Connects the meeting 5 minutes before the start of the class.
 # The program doesn't work if you run it more than one hour after class start
-# Program does not work on Mozilla Firefox
 # Calling the StartCheck function which controls program flow
 StartCheck()
