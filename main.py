@@ -84,6 +84,7 @@ def StartCheck():
             continue
     if no_class_today:
         print("You don't have a class today")
+    end = input("Press any key to exit")
 
 
 # Program does not work on Mozilla Firefox, preferably use Google Chrome, Opera or Edge
